@@ -9,6 +9,9 @@ public class HealthHandler : MonoBehaviour
     public void Hit(float damage){
         Health -= damage;
         // Play hit animation of parent
+        if (gameObject.transform.tag == "Fatty" || gameObject.transform.tag == "Boss") {
+            // Update Health bar 
+        }
 
         if (Health < 0) {
             Destroy(gameObject);
