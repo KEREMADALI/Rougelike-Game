@@ -40,23 +40,22 @@ public class CharacterController : MonoBehaviour
     private Vector3 GetShootingInput()
     {
         Vector3 retVal = Vector3.zero;
-        float shootDistance = 0.5f;
 
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            retVal.y = shootDistance;
+            retVal = Vector3.up;
         }
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            retVal.x = shootDistance;
+            retVal = Vector3.right;
         }
         else if (Input.GetKey(KeyCode.DownArrow))
         {
-            retVal.y = -shootDistance;
+            retVal = Vector3.down;
         }
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            retVal.x = -shootDistance;
+            retVal = Vector3.left;
         }
 
         return retVal;

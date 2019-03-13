@@ -5,12 +5,14 @@ using UnityEngine;
 public class BulletController : MonoBehaviour
 {
     private Vector3 speedVector;
+    private float bulletPower;
 
     public GameObject destroyEffect;
 
-    public void Initiate(float i_LifeSpan, Vector3 i_SpeedVector)
+    public void Initiate(float i_LifeSpan, Vector3 i_SpeedVector, float power)
     {
         speedVector = i_SpeedVector;
+        bulletPower = power;
         Invoke("DestroyItself", i_LifeSpan);
     }
 
@@ -29,6 +31,7 @@ public class BulletController : MonoBehaviour
 
     private void OnCollisionStay2D(Collision2D collision)
     {
+        collision.gameObject.GetComponent<HealthHandler>().Hit(bulletPower);
         DestroyItself();
     }
 

@@ -29,28 +29,17 @@ public class EnemyController : MonoBehaviour
     }
 
     private void ChasePlayer() {
+        if (target == null)
+            return;
+
         Vector3 localPosition = this.transform.position;
-        Vector3 targetPosition = target.position;
+        Vector3 targetPosition = target.position; ; 
 
         if (Vector3.Distance(localPosition, targetPosition) < stopDistance) {
             weapon.Shoot(Vector3.zero, numberOfBullets);
             return;
         }
         
-
         this.transform.position = Vector2.MoveTowards(localPosition, targetPosition, speed);
-    }
-
-    private void OnCollisionStay2D(Collision2D collision)
-    {
-        Hit();
-    }
-
-    public void Hit() {
-        health -= hitDamage;
-
-        if (health <= 0) {
-            Destroy(this.gameObject);
-        }
     }
 }

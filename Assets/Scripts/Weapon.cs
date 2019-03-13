@@ -8,8 +8,8 @@ public class Weapon : MonoBehaviour
     private const float bulletLifeSpan = 5.0f;
 
     private float timerBetweenShots;
+    private float bulletSpeed = 5.0f;
     private float bulletPower = 5.0f;
-    private float shootDistance = 0.5f;
     
     public GameObject bulletPrefab;
     public Vector3 m_ShootDirection { private get; set; }
@@ -55,16 +55,26 @@ public class Weapon : MonoBehaviour
             for (int i = 0; i < numberOfBullets; i++)
             {
                 float angle = i * Mathf.PI * 2f / numberOfBullets;
-                var bullet = Instantiate(bulletPrefab, position + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0), transform.rotation);
-                bullet.GetComponent<BulletController>().Initiate(bulletLifeSpan, new Vector3(Mathf.Cos(angle)*radius,Mathf.Sin(angle)*radius,0));
+                var bullet = Instantiate( bulletPrefab, 
+                                          position + new Vector3( Mathf.Cos(angle) * radius
+                                                                    , Mathf.Sin(angle) * radius
+                                                                    , 0), 
+                                          transform.rotation);
+                bullet.GetComponent<BulletController>().Initiate( bulletLifeSpan
+                                                                    , new Vector3( Mathf.Cos(angle) * radius
+                                                                                    , Mathf.Sin(angle) * radius
+                                                                                    , 0 )
+                                                                    , bulletPower);
             }
         }
         else
         {
-            position = transform.parent.position + shootDirection * 1 / shootDistance;
+            position = transform.parent.position + shootDirection;
 
             var bullet = Instantiate(bulletPrefab, position, transform.rotation);
-            bullet.GetComponent<BulletController>().Initiate(bulletLifeSpan, shootDirection * bulletPower);
+            bullet.GetComponent<BulletController>().Initiate( bulletLifeSpan
+                                                              , shootDirection * bulletSpeed
+                                                              , bulletPower);
         }
 
 

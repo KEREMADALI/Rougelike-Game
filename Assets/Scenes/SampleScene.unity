@@ -125,6 +125,8 @@ GameObject:
   - component: {fileID: 82955955}
   - component: {fileID: 82955956}
   - component: {fileID: 82955954}
+  - component: {fileID: 82955957}
+  - component: {fileID: 82955958}
   m_Layer: 10
   m_Name: Fatty
   m_TagString: Untagged
@@ -252,6 +254,40 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1, y: 3}
   m_EdgeRadius: 0
+--- !u!114 &82955957
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82955951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852c823ef9f87b046b375ac1b035fcf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 50
+--- !u!50 &82955958
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 82955951}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 0
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 4
 --- !u!1 &194724195
 GameObject:
   m_ObjectHideFlags: 0
@@ -265,6 +301,7 @@ GameObject:
   - component: {fileID: 194724198}
   - component: {fileID: 194724199}
   - component: {fileID: 194724200}
+  - component: {fileID: 194724201}
   m_Layer: 8
   m_Name: Enemy
   m_TagString: Untagged
@@ -350,6 +387,7 @@ MonoBehaviour:
   health: 50
   target: {fileID: 82955953}
   isZombie: 1
+  numberOfBullets: 6
 --- !u!61 &194724199
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -397,6 +435,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
+--- !u!114 &194724201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 194724195}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 852c823ef9f87b046b375ac1b035fcf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 50
 --- !u!4 &460428222 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2533450131716215466, guid: 1912c3992377daf478d3a2049bf1d48f,
