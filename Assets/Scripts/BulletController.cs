@@ -21,7 +21,9 @@ public class BulletController : MonoBehaviour
 
     private void DestroyItself()
     {
-        Instantiate(destroyEffect, transform.position, Quaternion.identity );
+        var effect = Instantiate(destroyEffect, transform.position, Quaternion.identity );
+        float effectDuration = effect.GetComponent<ParticleSystem>().duration + effect.GetComponent<ParticleSystem>().startLifetime;
+        Destroy(effect, effectDuration);
         Destroy(gameObject);
     }
 

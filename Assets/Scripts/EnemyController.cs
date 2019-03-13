@@ -6,14 +6,22 @@ public class EnemyController : MonoBehaviour
 {
     private const float speed = 0.05f;
     private const float hitDamage = 2.0f;
+    private const float stopDistance = 5;
+
+    private Weapon weapon;
 
     public float health = 10;
 
     public Transform target;
     public bool isZombie = false;
+    public int numberOfBullets = 4;
 
-    // Update is called once per frame
-    void Update()
+    public void Awake()
+    {
+        weapon = this.GetComponentInChildren<Weapon>();
+    }
+
+    public void Update()
     {
         if (isZombie) {
             ChasePlayer();
@@ -21,7 +29,16 @@ public class EnemyController : MonoBehaviour
     }
 
     private void ChasePlayer() {
-        this.transform.position = Vector2.MoveTowards(this.transform.position, target.position, speed);
+        Vector3 localPosition = this.transform.position;
+        Vector3 targetPosition = target.position;
+
+        if (Vector3.Distance(localPosition, targetPosition) < stopDistance) {
+            weapon.Shoot(Vector3.zero, numberOfBullets);
+            return;
+        }
+        
+
+        this.transform.position = Vector2.MoveTowards(localPosition, targetPosition, speed);
     }
 
     private void OnCollisionStay2D(Collision2D collision)

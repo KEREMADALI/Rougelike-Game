@@ -37,16 +37,36 @@ public class Weapon : MonoBehaviour
         }
     }
 
-    public void Shoot(Vector3 shootDirection)
+    public void Shoot(Vector3 shootDirection, int numberOfBullets=0)
     {
         if (timerBetweenShots > 0.0f && timerBetweenShots != delayBetweenShots)
+        {
             return;
+        }
 
         timerBetweenShots = delayBetweenShots - Time.deltaTime;
+        Vector3 position = transform.parent.position;
 
-        Vector3 position = transform.parent.position + shootDirection * 1/shootDistance;
+        if (numberOfBullets != 0)
+        {
+            List<GameObject> bullets = new List<GameObject>();
+            float radius = 2f;
 
-        var bullet = Instantiate(bulletPrefab, position, transform.rotation);
-        bullet.GetComponent<BulletController>().Initiate(bulletLifeSpan, shootDirection * bulletPower);
+            for (int i = 0; i < numberOfBullets; i++)
+            {
+                float angle = i * Mathf.PI * 2f / numberOfBullets;
+                var bullet = Instantiate(bulletPrefab, position + new Vector3(Mathf.Cos(angle) * radius, Mathf.Sin(angle) * radius, 0), transform.rotation);
+                bullet.GetComponent<BulletController>().Initiate(bulletLifeSpan, new Vector3(Mathf.Cos(angle)*radius,Mathf.Sin(angle)*radius,0));
+            }
+        }
+        else
+        {
+            position = transform.parent.position + shootDirection * 1 / shootDistance;
+
+            var bullet = Instantiate(bulletPrefab, position, transform.rotation);
+            bullet.GetComponent<BulletController>().Initiate(bulletLifeSpan, shootDirection * bulletPower);
+        }
+
+
     }
 }
