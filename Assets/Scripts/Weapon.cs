@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    public float delayBetweenShots = 1.0f;
+    public float reloadTime = 1.0f;
     private const float bulletLifeSpan = 5.0f;
 
     private float timerBetweenShots;
@@ -17,7 +17,7 @@ public class Weapon : MonoBehaviour
     private void Awake()
     {
         m_ShootDirection = Vector3.zero;
-        timerBetweenShots = delayBetweenShots;
+        timerBetweenShots = reloadTime;
     }
 
     private void Update()
@@ -29,9 +29,9 @@ public class Weapon : MonoBehaviour
     {
         if (timerBetweenShots < 0.0f)
         {
-            timerBetweenShots = delayBetweenShots;
+            timerBetweenShots = reloadTime;
         }
-        else if (timerBetweenShots < delayBetweenShots)
+        else if (timerBetweenShots < reloadTime)
         {
             timerBetweenShots -= Time.deltaTime;
         }
@@ -39,14 +39,17 @@ public class Weapon : MonoBehaviour
 
     public void Shoot(Vector3 shootDirection, int numberOfBullets=0)
     {
-        if (timerBetweenShots > 0.0f && timerBetweenShots != delayBetweenShots)
+        // Check the reload time
+        if (timerBetweenShots > 0.0f && timerBetweenShots != reloadTime)
         {
             return;
         }
 
-        timerBetweenShots = delayBetweenShots - Time.deltaTime;
+        // Start reload counter
+        timerBetweenShots = reloadTime - Time.deltaTime;
         Vector3 position = transform.parent.position;
 
+        // Will be simplifed (Condition will be removed) 
         if (numberOfBullets != 0)
         {
             List<GameObject> bullets = new List<GameObject>();
@@ -65,6 +68,8 @@ public class Weapon : MonoBehaviour
                                                                                     , Mathf.Sin(angle) * radius
                                                                                     , 0 )
                                                                     , bulletPower);
+
+                bullet.layer = transform.parent.gameObject.layer;
             }
         }
         else
@@ -76,6 +81,8 @@ public class Weapon : MonoBehaviour
                                                               , shootDirection * bulletSpeed
                                                               , bulletPower);
         }
+
+        
 
 
     }
