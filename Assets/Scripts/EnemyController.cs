@@ -16,6 +16,8 @@ public class EnemyController : MonoBehaviour
     public bool isZombie = false;
     public int numberOfBullets = 4;
 
+    public GameObject Gizmo;
+
     public void Awake()
     {
         weapon = this.GetComponentInChildren<Weapon>();
@@ -29,17 +31,44 @@ public class EnemyController : MonoBehaviour
     }
 
     private void ChasePlayer() {
-        if (target == null)
-            return;
-
-        Vector3 localPosition = this.transform.position;
-        Vector3 targetPosition = target.position; ; 
-
-        if (Vector3.Distance(localPosition, targetPosition) < stopDistance) {
-            weapon.Shoot(Vector3.zero, numberOfBullets);
+        if (target == null) {
             return;
         }
-        
+
+        Vector3 localPosition = this.transform.position;
+        Vector3 targetObjectPosition = target.position;
+        Vector3 targetPosition = new Vector3();
+
+
+        for (int i = 0; i < numberOfBullets; i++) {
+            float angle = i*(Mathf.PI * 2f / numberOfBullets);
+            Vector3 position = targetObjectPosition - new Vector3( Mathf.Cos(angle) * stopDistance, 
+                                                                Mathf.Sin(angle) * stopDistance, 
+                                                                0);
+
+            if (i == 0) {
+                targetPosition = position;
+            }
+            else {
+                targetPosition = Vector3.Distance(localPosition, targetPosition) < 
+                                    Vector3.Distance(localPosition, position) ? targetPosition : position;
+            }
+        }
+
+        if (Vector3.Distance(localPosition, targetObjectPosition) <= stopDistance)
+        {
+            weapon.Shoot(Vector3.zero, numberOfBullets);
+        }
         this.transform.position = Vector2.MoveTowards(localPosition, targetPosition, speed);
+    }
+
+    //Fazla güçlü, gücünü azalt
+    public void OnCollisionStay2D(Collision2D collision)
+    {
+        //GameObject obj = collision.gameObject;
+
+        //if (obj.name == "Fatty") {
+        //    obj.GetComponent<HealthHandler>().Hit(hitDamage);
+        //}
     }
 }
