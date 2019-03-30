@@ -5,15 +5,26 @@ using UnityEngine;
 
 public class CharacterController : MonoBehaviour
 {
+    #region Private & Const Variables
     private const float p_Speed = 5.0f;
     private int runningType = 0;
 
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private Weapon weapon;
+    #endregion
 
+    #region Public Variables
 
-    private void Awake() {
+    #endregion
+
+    #region Public Methods
+
+    #endregion
+
+    #region Private Methods
+    private void Awake()
+    {
         animator = this.GetComponent<Animator>();
         spriteRenderer = this.GetComponent<SpriteRenderer>();
         weapon = this.GetComponentInChildren<Weapon>();
@@ -21,13 +32,13 @@ public class CharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        Vector2 inputMovementVector =  GetMovementInput();
+        Vector2 inputMovementVector = GetMovementInput();
         Vector3 inputShootingVector = GetShootingInput();
 
         Flip(inputMovementVector.x);
         Move(inputMovementVector);
 
-        if(!inputShootingVector.Equals(Vector3.zero))
+        if (!inputShootingVector.Equals(Vector3.zero))
             Shoot(inputShootingVector);
     }
     // Updates shootInput if inputVector not zero
@@ -62,7 +73,8 @@ public class CharacterController : MonoBehaviour
     }
 
     // Reads keyboard commands
-    private Vector2 GetMovementInput() {
+    private Vector2 GetMovementInput()
+    {
         int x = 0;
         int y = 0;
 
@@ -86,7 +98,7 @@ public class CharacterController : MonoBehaviour
             x--;
         }
 
-        Vector2 retVal = new Vector2(x,y);
+        Vector2 retVal = new Vector2(x, y);
 
         return retVal;
     }
@@ -96,13 +108,15 @@ public class CharacterController : MonoBehaviour
     {
         bool flipSprite = spriteRenderer.flipX ? horizontalDirection < 0.0f : horizontalDirection > 0.0f;
 
-        if (flipSprite) {
+        if (flipSprite)
+        {
             spriteRenderer.flipX = !spriteRenderer.flipX;
         }
     }
 
     // Controls character movement and animation
-    private void Move(Vector2 inputVector) {
+    private void Move(Vector2 inputVector)
+    {
 
         if (inputVector.y > 0.0f)
         {
@@ -119,7 +133,8 @@ public class CharacterController : MonoBehaviour
             // Running SideWays
             runningType = 2;
         }
-        else {
+        else
+        {
             // Idle
             runningType = 0;
         }
@@ -127,7 +142,14 @@ public class CharacterController : MonoBehaviour
         // Start or stop running animation
         animator.SetInteger("RunningType", runningType);
 
-        transform.Translate(inputVector * p_Speed * Time.fixedDeltaTime);
+        Vector2 localPos = transform.position;
+        Vector2 targetPos = localPos + inputVector;
+        this.transform.position = Vector2.MoveTowards(localPos, targetPos, p_Speed * Time.fixedDeltaTime);
     }
+    #endregion
+
+
+
+
 
 }

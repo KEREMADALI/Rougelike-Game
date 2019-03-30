@@ -4,17 +4,25 @@ using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
+    #region Private & Const Variables
     private Vector3 speedVector;
-    private float bulletPower;
+    private double bulletPower;
+    #endregion
 
+    #region Public Variables
     public GameObject destroyEffect;
+    #endregion
 
+    #region Public Methods
     public void Initiate(float i_LifeSpan, Vector3 i_SpeedVector, float power)
     {
         speedVector = i_SpeedVector;
         bulletPower = power;
         Invoke("DestroyItself", i_LifeSpan);
     }
+    #endregion
+
+    #region Private Methods
 
     private void Update()
     {
@@ -23,18 +31,25 @@ public class BulletController : MonoBehaviour
 
     private void DestroyItself()
     {
-        var effect = Instantiate(destroyEffect, transform.position, Quaternion.identity );
-        float effectDuration = effect.GetComponent<ParticleSystem>().duration + effect.GetComponent<ParticleSystem>().startLifetime;
-        Destroy(effect, effectDuration);
+        var destroyAnimation = Instantiate(destroyEffect, transform.position, Quaternion.identity);
+        float animationDuration = destroyAnimation.GetComponent<ParticleSystem>().main.duration + destroyAnimation.GetComponent<ParticleSystem>().main.startLifetimeMultiplier;
+        Destroy(destroyAnimation, animationDuration);
         Destroy(gameObject);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.GetComponent<HealthHandler>() != null) {
-            collision.gameObject.GetComponent<HealthHandler>().Hit(bulletPower);
+        if (collision.gameObject.GetComponent<HealthHandler>() != null)
+        {
+            collision.gameObject.GetComponent<HealthHandler>().Effect(-bulletPower);
         }
         DestroyItself();
     }
+    #endregion
+
+
+
+
+
 
 }

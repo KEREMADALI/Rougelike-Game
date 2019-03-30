@@ -1,20 +1,45 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class HealthHandler : MonoBehaviour
 {
-    public float Health = 20;
+    #region Private & Static Variables
+    private double HealthMax;
+    #endregion
 
-    public void Hit(float damage){
-        Health -= damage;
+    #region Public Variables
+    public double Health = 50;
+    public Transform HealthBar;
+    #endregion
+
+    #region Public Methods
+    public void Effect(double var)
+    {
+        Health += var;
+        Health = Health > HealthMax ? HealthMax : Health;
+
         // Play hit animation of parent
-        if (gameObject.transform.tag == "Fatty" || gameObject.transform.tag == "Boss") {
-            // Update Health bar 
-        }
 
-        if (Health < 0) {
+        if (HealthBar != null) {
+            HealthBar.transform.localScale = new Vector3((float)(Health / HealthMax),1);
+        }
+        else{
+            Debug.LogError(gameObject.name + " :HealthBar is null.");
+        }
+        
+
+        if (Health <= 0)
+        {
             Destroy(gameObject);
         }
     }
+
+    #endregion
+
+    #region Private Methods
+    private void Awake()
+    {
+        this.HealthMax = this.Health;
+        this.HealthBar = HealthBar== null ? transform.Find("HealthBar")?.Find("BarContainer")?.transform : HealthBar;
+    }
+    #endregion
 }
