@@ -7,7 +7,6 @@ public class CharacterController : MonoBehaviour
 {
     #region Private & Const Variables
     private const float p_Speed = 5.0f;
-    private int runningType = 0;
 
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -117,6 +116,7 @@ public class CharacterController : MonoBehaviour
     // Controls character movement and animation
     private void Move(Vector2 inputVector)
     {
+        int runningType = 0;
 
         if (inputVector.y > 0.0f)
         {
@@ -132,11 +132,6 @@ public class CharacterController : MonoBehaviour
         {
             // Running SideWays
             runningType = 2;
-        }
-        else
-        {
-            // Idle
-            runningType = 0;
         }
 
         // Start or stop running animation
