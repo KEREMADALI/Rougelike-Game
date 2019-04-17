@@ -5,11 +5,12 @@ using UnityEngine;
 public class EnemyController : MonoBehaviour
 {
     #region Private & Const Variables
-    private const float speed = 2.0f;
+    private const float speed = 4.0f;
     private const float hitDamage = 2.0f;
     private const float stopDistance = 5;
 
     private Weapon weapon;
+    private Rigidbody2D rb;
     #endregion
 
     #region Public Variables
@@ -35,9 +36,10 @@ public class EnemyController : MonoBehaviour
     private void Awake()
     {
         weapon = this.GetComponentInChildren<Weapon>();
+        rb = this.GetComponent<Rigidbody2D>();
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
         if (isZombie)
         {
@@ -52,9 +54,9 @@ public class EnemyController : MonoBehaviour
             return;
         }
 
-        Vector3 localPosition = this.transform.position;
-        Vector3 targetObjectPosition = target.position;
-        Vector3 targetPosition = target.position;
+        Vector2 localPosition = this.transform.position;
+        Vector2 targetObjectPosition = target.position;
+        Vector2 targetPosition = target.position;
 
         if (numberOfBullets > 1)
         {
@@ -62,9 +64,8 @@ public class EnemyController : MonoBehaviour
             for (int i = 0; i < numberOfBullets; i++)
             {
                 float angle = i * (Mathf.PI * 2f / numberOfBullets);
-                Vector3 position = targetObjectPosition - new Vector3(Mathf.Cos(angle) * stopDistance,
-                                                                    Mathf.Sin(angle) * stopDistance,
-                                                                    0);
+                Vector2 position = targetObjectPosition - new Vector2(Mathf.Cos(angle) * stopDistance,
+                                                                    Mathf.Sin(angle) * stopDistance);
 
                 if (i == 0)
                 {
@@ -72,8 +73,8 @@ public class EnemyController : MonoBehaviour
                 }
                 else
                 {
-                    targetPosition = Vector3.Distance(localPosition, targetPosition) <
-                                        Vector3.Distance(localPosition, position) ? targetPosition : position;
+                    targetPosition = Vector2.Distance(localPosition, targetPosition) <
+                                        Vector2.Distance(localPosition, position) ? targetPosition : position;
                 }
             }
         }
@@ -82,14 +83,17 @@ public class EnemyController : MonoBehaviour
             var directionVector = localPosition - targetObjectPosition;
             targetPosition += 5 * (directionVector / directionVector.magnitude);
         }
+        var targetDirectionVector = targetObjectPosition - localPosition;
+        Vector2 targetDirection = targetDirectionVector / targetDirectionVector.magnitude;
 
         if (Vector3.Distance(localPosition, targetObjectPosition) <= stopDistance)
         {
-            var targetDirectionVector = targetObjectPosition - localPosition;
-            Vector3 targetDirection = targetDirectionVector / targetDirectionVector.magnitude;
+            //var targetDirectionVector = targetObjectPosition - localPosition;
+            //targetDirection = targetDirectionVector / targetDirectionVector.magnitude;
             weapon.Shoot(targetDirection, numberOfBullets);
         }
-        this.transform.position = Vector2.MoveTowards(localPosition, targetPosition, speed * Time.fixedDeltaTime);
+        //this.transform.position = Vector2.MoveTowards(localPosition, targetPosition, speed * Time.fixedDeltaTime);
+        rb.MovePosition(localPosition + targetDirection * speed * Time.fixedDeltaTime);
     }
     #endregion
 }

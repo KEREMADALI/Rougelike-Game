@@ -6,7 +6,7 @@ using UnityEngine;
 public class CharacterController : MonoBehaviour
 {
     #region Private & Const Variables
-    private const float p_Speed = 5.0f;
+    private const float p_Speed = 10.0f;
 
     private Animator animator;
     private SpriteRenderer spriteRenderer;
