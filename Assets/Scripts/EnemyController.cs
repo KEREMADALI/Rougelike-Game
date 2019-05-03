@@ -8,6 +8,7 @@ public class EnemyController : MonoBehaviour
     private const float speed = 4.0f;
     private const float hitDamage = 2.0f;
     private const float stopDistance = 5;
+    private Vector2 direction;
 
     private Weapon weapon;
     private Rigidbody2D rb;
@@ -45,6 +46,11 @@ public class EnemyController : MonoBehaviour
         {
             ChasePlayer();
         }
+        else {
+            direction = Vector2.zero;
+        }
+
+        UpdateAnimationHandler();
     }
 
     private void ChasePlayer()
@@ -56,7 +62,7 @@ public class EnemyController : MonoBehaviour
 
         Vector2 localPosition = this.transform.position;
         Vector2 targetObjectPosition = target.position;
-        Vector2 targetPosition = target.position;
+        Vector2 positionToGo = target.position;
 
         if (numberOfBullets > 1)
         {
@@ -64,36 +70,42 @@ public class EnemyController : MonoBehaviour
             for (int i = 0; i < numberOfBullets; i++)
             {
                 float angle = i * (Mathf.PI * 2f / numberOfBullets);
-                Vector2 position = targetObjectPosition - new Vector2(Mathf.Cos(angle) * stopDistance,
+                Vector2 positionAroundTarget = targetObjectPosition - new Vector2(Mathf.Cos(angle) * stopDistance,
                                                                     Mathf.Sin(angle) * stopDistance);
-
+                // Find the closest position to go
                 if (i == 0)
                 {
-                    targetPosition = position;
+                    positionToGo = positionAroundTarget;
                 }
                 else
                 {
-                    targetPosition = Vector2.Distance(localPosition, targetPosition) <
-                                        Vector2.Distance(localPosition, position) ? targetPosition : position;
+                    positionToGo = Vector2.Distance(localPosition, positionToGo) <
+                                        Vector2.Distance(localPosition, positionAroundTarget) ? positionToGo : positionAroundTarget;
                 }
             }
         }
         else {
             // Closest point in targets radius
-            var directionVector = localPosition - targetObjectPosition;
-            targetPosition += 5 * (directionVector / directionVector.magnitude);
+            direction = (localPosition - targetObjectPosition).normalized;
+            positionToGo += stopDistance * direction;
         }
-        var targetDirectionVector = targetObjectPosition - localPosition;
-        Vector2 targetDirection = targetDirectionVector / targetDirectionVector.magnitude;
+        // Target position to go direction
+        direction = (positionToGo - localPosition).normalized;
 
-        if (Vector3.Distance(localPosition, targetObjectPosition) <= stopDistance)
+        // Shoot when the target is close enough
+        if (Vector3.Distance(localPosition, targetObjectPosition) <= (stopDistance + 0.2))
         {
-            //var targetDirectionVector = targetObjectPosition - localPosition;
-            //targetDirection = targetDirectionVector / targetDirectionVector.magnitude;
-            weapon.Shoot(targetDirection, numberOfBullets);
+            Vector2 shootDirection = (targetObjectPosition - localPosition).normalized;
+            weapon.Shoot(shootDirection, numberOfBullets);
         }
-        //this.transform.position = Vector2.MoveTowards(localPosition, targetPosition, speed * Time.fixedDeltaTime);
-        rb.MovePosition(localPosition + targetDirection * speed * Time.fixedDeltaTime);
+        if(Vector2.Distance(localPosition,positionToGo) > 0.2)
+        // Always try to keep distance
+        rb.MovePosition(localPosition + direction * speed * Time.fixedDeltaTime);
+
+    }
+
+    private void UpdateAnimationHandler() {
+        gameObject.GetComponent<AnimationHandler>().direction = direction;
     }
     #endregion
 }

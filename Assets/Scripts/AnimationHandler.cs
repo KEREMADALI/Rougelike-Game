@@ -24,10 +24,8 @@ public class AnimationHandler : MonoBehaviour
     #region Private Methods
     private void Awake()
     {
-        rb = this.GetComponent<Rigidbody2D>();
         animator = this.GetComponent<Animator>();
         spriteRenderer = this.GetComponent<SpriteRenderer>();
-        position = transform.position;
     }
 
     private void Update()
@@ -37,32 +35,22 @@ public class AnimationHandler : MonoBehaviour
     }
 
     private void SetAnimationType(){
-        direction = (Vector2) transform.position - position;
-        runningType = 0;
 
-        if (direction.y > 0.05f)
+        if (Mathf.Abs(direction.x) > Mathf.Abs(direction.y))
         {
-            // Running Up
-            runningType = 1;
+            animator.SetFloat("x", direction.x > 0 ? 1 : -1);
+            animator.SetFloat("y", 0);
         }
-        else if (direction.y < -0.05f)
+        else if (Mathf.Abs(direction.x) < Mathf.Abs(direction.y))
         {
-            // Running Down
-            runningType = 3;
+            animator.SetFloat("x", 0);
+            animator.SetFloat("y", direction.y > 0 ? 1 : -1);
         }
-        else if (direction.x < 0.0f)
+        else
         {
-            // Running Left
-            runningType = 2;
+            animator.SetFloat("x", 0);
+            animator.SetFloat("y", 0);
         }
-        else if (direction.x > 0.0f)
-        {
-            // Running Right
-            runningType = 4;
-        }
-
-        // Start or stop running animation
-        animator.SetInteger("RunningType", runningType);
 
         if (isFlipOn)
         {
